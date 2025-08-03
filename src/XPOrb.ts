@@ -89,21 +89,6 @@ class XPOrb extends Plugin {
         this.cleanup();
     }
 
-    // SocketManager_loggedIn(): void {
-    //     this.log('Player logged in, setting up XP tracking');
-    //     setTimeout(() => {
-    //         this.loadSessionXPFromDatabase();
-    //         this.setupXPTracking();
-    //         this.createXPTrackerUI();
-    //     }, 500);
-    // }
-
-    // SocketManager_handleLoggedOut(): void {
-    //     this.log('Player logged out, cleaning up XP tracking');
-    //     this.saveSessionXPToDatabase();
-    //     this.cleanup();
-    // }
-
     GameLoop_update(): void {
         if (!this.settings.enable.value) return;
         this.updateXPDrops();
@@ -536,19 +521,11 @@ class XPOrb extends Plugin {
 
     private async saveSessionXPToDatabase(): Promise<void> {
         try {
-            // const dbManager = document.highlite?.managers?.DatabaseManager;
-            // if (!dbManager || !dbManager.database) return;
-            //
             const sessionData = {
-                sessionXP: this.sessionXP,
+                xp: this.sessionXP,
                 lastUpdated: Date.now(),
             };
-            //
-            // await dbManager.database.put(
-            //     'settings',
-            //     sessionData,
-            //     `${this.pluginName}_sessionXP`
-            // );
+
             this.data.sessionXP = sessionData;
         } catch (error) {
             console.error('Error saving session XP to database:', error);
@@ -557,7 +534,7 @@ class XPOrb extends Plugin {
 
     private async loadSessionXPFromDatabase(): Promise<void> {
         try {
-            this.sessionXP = this.data.sessionXP.sessionXP;
+            this.sessionXP = this.data.sessionXP.xp | 0;
             this.updateSessionXPDisplay();
             this.log(`Loaded session XP from database: ${this.sessionXP}`);
         } catch (error) {
